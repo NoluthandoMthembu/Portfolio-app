@@ -1,0 +1,52 @@
+// Add to your server.js
+const projectsRouter = require('./routes/projects');
+app.use('/api/projects', projectsRouter);
+
+// Sponsor tracking middleware
+app.use('/api', (req, res, next) => {
+  if (req.headers['x-sponsor-token']) {
+    console.log(`Sponsor access from ${req.ip}`);
+  }
+  next();
+});
+
+// Create routes/projects.js
+const express = require('express');
+const router = express.Router();
+const QRCode = require('qrcode');
+
+// Sample project data
+const projects = [
+  {
+    id: 1,
+    title: "E-commerce Platform",
+    description: "Full-stack e-commerce solution",
+    technologies: ["React", "Node.js", "MongoDB"],
+    sponsorBenefits: ["Logo placement", "Case study feature"]
+  }
+];
+
+// Get all projects with sponsor options
+router.get('/', async (req, res) => {
+  try {
+    // Generate QR code for sponsor access
+    const qrCode = await QRCode.toDataURL(`${req.protocol}://${req.get('host')}/sponsor`);
+    
+    res.json({
+      projects,
+      sponsorOptions: {
+        qrCode,
+        contact: "sponsors@yourportfolio.com",
+        tiers: [
+          { name: "Bronze", benefits: ["Logo"] },
+          { name: "Silver", benefits: ["Logo", "Featured project"] },
+          { name: "Gold", benefits: ["All Silver benefits", "Dedicated page"] }
+        ]
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+module.exports = router;

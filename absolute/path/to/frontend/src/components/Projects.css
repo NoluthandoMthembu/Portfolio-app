@@ -1,0 +1,24 @@
+.projects-container {
+  margin: 20px 0;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.project-card {
+  border: 1px solid #dddddd;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.loading, .error {
+  padding: 20px;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: rgb(255, 0, 166);
+}
